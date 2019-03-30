@@ -33,42 +33,42 @@ using Random: seed!
         seed!(1)
         obs = @point zeros(2)
         c = rand(RectifiableBernstein{2,7})
-        @show abs(minimum_distance(obs, c) - 0.3683522584741768) ≤ 1e-5
-        @show tolerance_verification(obs, c, 0.3) == true
-        @show tolerance_verification(obs, c, 0.4) == false
-        @show collision_detection(obs, c) == false
-        @show abs(minimum_distance(c, obs) - 0.3683522584741768) ≤ 1e-5
-        @show tolerance_verification(c, obs, 0.3) == true
-        @show tolerance_verification(c, obs, 0.4) == false
-        @show collision_detection(c, obs) == false
+        @test abs(minimum_distance(obs, c) - 0.3683522584741768) ≤ 1e-5
+        @test tolerance_verification(obs, c, 0.3) == true
+        @test tolerance_verification(obs, c, 0.4) == false
+        @test collision_detection(obs, c) == false
+        @test abs(minimum_distance(c, obs) - 0.3683522584741768) ≤ 1e-5
+        @test tolerance_verification(c, obs, 0.3) == true
+        @test tolerance_verification(c, obs, 0.4) == false
+        @test collision_detection(c, obs) == false
 
         seed!(1)
         obs = @point zeros(3)
         c = rand(RectifiableBernstein{3,11})
-        @show abs(minimum_distance(obs, c) - 0.511627527056288) ≤ 1e-5
-        @show tolerance_verification(obs, c, 0.5) == true
-        @show tolerance_verification(obs, c, 0.6) == false
-        @show collision_detection(obs, c) == false
-        @show abs(minimum_distance(c, obs) - 0.511627527056288) ≤ 1e-5
-        @show tolerance_verification(c, obs, 0.5) == true
-        @show tolerance_verification(c, obs, 0.6) == false
-        @show collision_detection(c, obs) == false
+        @test abs(minimum_distance(obs, c) - 0.511627527056288) ≤ 1e-5
+        @test tolerance_verification(obs, c, 0.5) == true
+        @test tolerance_verification(obs, c, 0.6) == false
+        @test collision_detection(obs, c) == false
+        @test abs(minimum_distance(c, obs) - 0.511627527056288) ≤ 1e-5
+        @test tolerance_verification(c, obs, 0.5) == true
+        @test tolerance_verification(c, obs, 0.6) == false
+        @test collision_detection(c, obs) == false
     end
     @testset "Curve - Curve" begin
         seed!(1)
         c = rand(RectifiableBernstein{2,7})
         d = rand(RectifiableBernstein{2,3})
-        @show abs(minimum_distance(c, d)) ≤ 1e-5
-        @show tolerance_verification(c, d, 0.3) == false
-        @show collision_detection(c, d) == true
+        @test abs(minimum_distance(c, d)) ≤ 1e-5
+        @test tolerance_verification(c, d, 0.3) == false
+        @test collision_detection(c, d) == true
 
         seed!(1)
         obs = @point zeros(3)
         c = rand(RectifiableBernstein{3,11})
         d = rand(RectifiableBernstein{3,5})
-        @show abs(minimum_distance(c, d) - 0.137873546917387) ≤ 1e-5
-        @show tolerance_verification(c, d, 0.1) == true
-        @show tolerance_verification(c, d, 0.3) == false
-        @show collision_detection(c, d) == false
+        @test abs(minimum_distance(c, d) - 0.137873546917387) ≤ 1e-5
+        @test tolerance_verification(c, d, 0.1) == true
+        @test tolerance_verification(c, d, 0.3) == false
+        @test collision_detection(c, d) == false
     end
 end
