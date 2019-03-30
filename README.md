@@ -40,7 +40,7 @@ a 3rd order Rectifiable Bernstein polynomial with control points at:
 ([0.0, 0.0], [1.0, 2.0], [2.0, 0.0], [3.0, 0.0])
 with an arclength of 3.714835124201342
 ```
-Generally Bernstein polynomials are evaluated between $[0, 1]$, but custom limits can be provided using `Interval` from the `IntervalArithmetic` pacakge:
+Generally Bernstein polynomials are evaluated between $[0, 1]$, but custom limits can be provided using `Interval` from the `IntervalArithmetic` package:
 ```julia
 julia> c = RectifiableBernstein(cpts, limits=Interval(0.5, 2.5))
 a 3rd order Rectifiable Bernstein polynomial with control points at:
@@ -54,7 +54,7 @@ julia> c(1.5)
  1.5
  0.75
 ```
-Note, that the arclength is not a true arclength but an upperbound that is used by the proximity methods. This upperbound can be evalued at an interval or from the beginning of the limit using:
+Note, that the arclength is not a true arclength but an upper bound that is used by the proximity methods. This upper bound can be evaluated at an interval or from the beginning of the limit using:
 ```julia
 julia> arclength(c, Interval(0.9, 1.4))
 0.7839413641976036
@@ -127,8 +127,6 @@ struct Monomial{D, N, T} <: RectifiableCurve{D, T}
   coeff::SVector{N, SVector{D, T}}
 end
 ```
-Methods to compute the evaluation (as a functor), and arclength upperbound has to be provided (see paper for details).
+Methods to compute the evaluation (as a functor), and arclength upper bound has to be provided (see paper for details).
 
 Similarly, custom types for obstacles can be created. If the obstacles are convex, then only a [support mapping](https://github.com/arlk/ConvexBodyProximityQueries.jl#usage) for the custom type is required. However, if the obstacle is not convex then methods to compute the `minimum_distance`, `tolerance_verification`, and `collision_detection` between a point in space and the object must be provided.
-
-### Custom Obstacle Types
