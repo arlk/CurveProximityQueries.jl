@@ -74,7 +74,8 @@ function closest_points(a, b::RectifiableCurve{D}, soln) where {D}
 end
 
 function closest_points(b::RectifiableCurve{D}, a, soln) where {D}
-    closest_points(a, b, soln)
+    pts = closest_points(a, b, soln)
+    reverse(pts)
 end
 
 function closest_points(a::RectifiableCurve{D}, b::RectifiableCurve{D}, soln) where {D}

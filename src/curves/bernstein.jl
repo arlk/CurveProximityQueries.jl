@@ -11,13 +11,24 @@ function Bernstein(cp::Vararg{SVector,N}) where {N}
     Bernstein(cpts)
 end
 
+function Bernstein(data::Array{Array{T, 1}}) where {T}
+    cptsz = length(data)
+    dimsz = length(data[1])
+    Bernstein(data, Val(dimsz), Val(cptsz))
+end
+
+function Bernstein(data::Array{Array{T, 1}}, ::Val{D}, ::Val{N}) where {D, N, T}
+    cpts = SVector{N}([SVector{D}(d) for d in data])
+    Bernstein(cpts)
+end
+
 Base.eltype(::Type{Bernstein{D, N, T}}) where {D, N, T} = T
 Base.getindex(b::Bernstein, j::Int) = b.control_points[j]
 
 function Base.show(io::IO, b::Bernstein{D, N, T}) where {D, N, T}
     ordind = (N-1)%10 == 1 ? "st" : "th"
-    ordind = (N-2)%10 == 2 ? "nd" : ordind
-    ordind = (N-3)%10 == 3 ? "rd" : ordind
+    ordind = (N-1)%10 == 2 ? "nd" : ordind
+    ordind = (N-1)%10 == 3 ? "rd" : ordind
     ordind = 11 ≤ (N-1)%100 ≤ 13 ? "th" : ordind
 
     print(io, "a ", (N-1), ordind, " order Bernstein polynomial with control points at:\n",
@@ -175,6 +186,10 @@ function RectifiableBernstein(f::Bernstein; limits=Interval(0., 1.)) where {N}
     RectifiableBernstein(f, s, limits)
 end
 
+function RectifiableBernstein(data::Array{Array{T, 1}}; limits=Interval(0., 1.)) where {T}
+    RectifiableBernstein(Bernstein(data), limits=limits)
+end
+
 scalet(b::RectifiableBernstein, t) = (t - b.limits.lo)/diam(b.limits)
 
 function (b::RectifiableBernstein)(t::Real)
@@ -200,8 +215,8 @@ Base.getindex(b::RectifiableBernstein, j::Int) = b.f.control_points[j]
 
 function Base.show(io::IO, b::RectifiableBernstein{D, N, T}) where {D, N, T}
     ordind = (N-1)%10 == 1 ? "st" : "th"
-    ordind = (N-2)%10 == 2 ? "nd" : ordind
-    ordind = (N-3)%10 == 3 ? "rd" : ordind
+    ordind = (N-1)%10 == 2 ? "nd" : ordind
+    ordind = (N-1)%10 == 3 ? "rd" : ordind
     ordind = 11 ≤ (N-1)%100 ≤ 13 ? "th" : ordind
 
     print(io, "a ", (N-1), ordind, " order Rectifiable Bernstein polynomial with control points at:\n",
@@ -226,13 +241,18 @@ function -(a::RectifiableBernstein{D}, b::RectifiableBernstein{D}) where {D}
     a + -b
 end
 
+function differentiate(b::RectifiableBernstein)
+    c = differentiate(b.f)/diam(b.limits)
+    RectifiableBernstein(c, limits=b.limits)
+end
+
 import Random: rand
 function rand(::Type{Bernstein{D, N}}) where {D, N}
     pts = [@SVector(rand(D)) for i=1:N]
     Bernstein(pts...)
 end
 
-function rand(::Type{RectifiableBernstein{D, N}}) where {D, N}
+function rand(::Type{RectifiableBernstein{D, N}}; limits=Interval(0., 1.)) where {D, N}
     bern = rand(Bernstein{D, N})
-    RectifiableBernstein(bern)
+    RectifiableBernstein(bern, limits=limits)
 end

@@ -35,22 +35,22 @@ macro line(ex)
 end
 
 function rect(center::SVector{2, T}, widths::SVector{2, T}) where {T}
-    pt1 = center + SVector{2}( 1.0,  1.0).*widths
-    pt2 = center + SVector{2}(-1.0,  1.0).*widths
-    pt3 = center + SVector{2}(-1.0, -1.0).*widths
-    pt4 = center + SVector{2}( 1.0, -1.0).*widths
+    pt1 = center + SVector{2}( 0.5,  0.5).*widths
+    pt2 = center + SVector{2}(-0.5,  0.5).*widths
+    pt3 = center + SVector{2}(-0.5, -0.5).*widths
+    pt4 = center + SVector{2}( 0.5, -0.5).*widths
     ConvexPolygon(SVector{4, SVector{2, T}}(pt1, pt2, pt3, pt4))
 end
 
 function rect(center::SVector{3, T}, widths::SVector{3, T}) where {T}
-    pt1 = center + SVector{3}( 1.0,  1.0,  1.0).*widths
-    pt2 = center + SVector{3}(-1.0,  1.0,  1.0).*widths
-    pt3 = center + SVector{3}(-1.0, -1.0,  1.0).*widths
-    pt4 = center + SVector{3}( 1.0, -1.0,  1.0).*widths
-    pt5 = center + SVector{3}( 1.0,  1.0, -1.0).*widths
-    pt6 = center + SVector{3}(-1.0,  1.0, -1.0).*widths
-    pt7 = center + SVector{3}(-1.0, -1.0, -1.0).*widths
-    pt8 = center + SVector{3}( 1.0, -1.0, -1.0).*widths
+    pt1 = center + SVector{3}( 0.5,  0.5,  0.5).*widths
+    pt2 = center + SVector{3}(-0.5,  0.5,  0.5).*widths
+    pt3 = center + SVector{3}(-0.5, -0.5,  0.5).*widths
+    pt4 = center + SVector{3}( 0.5, -0.5,  0.5).*widths
+    pt5 = center + SVector{3}( 0.5,  0.5, -0.5).*widths
+    pt6 = center + SVector{3}(-0.5,  0.5, -0.5).*widths
+    pt7 = center + SVector{3}(-0.5, -0.5, -0.5).*widths
+    pt8 = center + SVector{3}( 0.5, -0.5, -0.5).*widths
     ConvexPolygon(SVector{8, SVector{3, T}}(pt1, pt2, pt3, pt4,
                                             pt5, pt6, pt7, pt8))
 end
