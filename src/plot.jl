@@ -7,8 +7,6 @@ using RecipesBase
     legend --> false
     aspect_ratio --> :equal
     linewidth --> 2.0
-    #  linecolor --> :black
-    #  linealpha --> 0.5
     @series begin
         xy(u) = b(u)
         lim = b.limits
@@ -25,8 +23,6 @@ end
     legend --> false
     aspect_ratio --> :equal
     linewidth --> 2.0
-    #  linecolor --> :black
-    #  linealpha --> 0.5
     @series begin
         xy(u) = b(u)
         lim = limits
@@ -37,11 +33,11 @@ end
 end
 
 @recipe function f(a::ConvexPolygon)
-    grid := false
-    axis := false
-    ticks := false
-    legend := false
-    aspect_ratio := :equal
+    grid --> false
+    axis --> false
+    ticks --> false
+    legend --> false
+    aspect_ratio --> :equal
     linewidth --> 1.0
     linecolor --> :black
     fillcolor --> :black
@@ -55,11 +51,11 @@ end
 end
 
 @recipe function f(a::Tuple{SVector{D, T}, SVector{D, T}}) where {D, T}
-    #  grid := false
-    #  axis := false
-    #  ticks := false
-    #  legend := false
-    #  aspect_ratio := :equal
+    grid --> false
+    axis --> false
+    ticks --> false
+    legend --> false
+    aspect_ratio --> :equal
     linewidth --> 1.0
     linecolor --> :red
     markercolor --> :red

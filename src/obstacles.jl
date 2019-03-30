@@ -68,7 +68,7 @@ macro square(ex)
     :(square(@SVector($(ex.args[1])), $(ex.args[2])))
 end
 
-function randpoly(center=[0., 0.]; n::Int=10, scale=1.0)
+function randpoly(center=[0., 0.], θ=0.0; n::Int=10, scale=1.0)
     # from http://cglab.ca/~sander/misc/ConvexGeneration/convex.html
     xs = sort(rand(n))
     ys = sort(rand(n))
@@ -110,8 +110,11 @@ function randpoly(center=[0., 0.]; n::Int=10, scale=1.0)
         v += vec[i]
         minv = min.(minv, v)
     end
-    shift = [minx-0.5, miny-0.5] - minv + center
+    shift = [minx-0.5, miny-0.5] - minv
     pts .+= Ref(shift)
+    rotate = [cos(θ) -sin(θ); sin(θ) cos(θ)]
+    pts = Ref(rotate).*pts
+    pts .+= Ref(center)
     pts *= scale
     ConvexPolygon(pts, Val(2), Val(n))
 end
