@@ -114,7 +114,7 @@ function randpoly(center=[0., 0.], θ=0.0; n::Int=10, scale=1.0)
     pts .+= Ref(shift)
     rotate = [cos(θ) -sin(θ); sin(θ) cos(θ)]
     pts = Ref(rotate).*pts
-    pts .+= Ref(center)
     pts *= scale
+    pts .+= Ref(center)
     ConvexPolygon(pts, Val(2), Val(n))
 end
