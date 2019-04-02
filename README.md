@@ -11,6 +11,7 @@ CurveProximityQueries implements methods to compute the
  - Minimum Distance
  - Tolerance Verification
  - Collision Detection
+
 between an absolutely continuous parametric curve and another object, or between two curves. If you find this package/work useful in your research please cite:
 ```
 @article{lakshmanan2019proximity,
