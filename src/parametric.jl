@@ -1,9 +1,7 @@
-export ParametricCurve, RectifiableCurve
-export Bernstein, @bernstein
-export RectifiableBernstein, @rectifiablebernstein
+export Curve
+export Bernstein
 export differentiate, integrate, arclength
 
-abstract type ParametricCurve{D, T} end
-abstract type RectifiableCurve{D, T} end
+abstract type Curve{D, T} end
 
 include("curves/bernstein.jl")

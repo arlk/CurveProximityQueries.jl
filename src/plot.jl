@@ -1,6 +1,6 @@
 using RecipesBase
 
-@recipe function f(b::RectifiableCurve)
+@recipe function f(b::Curve)
     grid --> false
     axis --> false
     ticks --> false
@@ -10,22 +10,6 @@ using RecipesBase
     @series begin
         xy(u) = b(u)
         lim = b.limits
-        Δ = diam(lim)/100
-        θ = lim.lo:Δ:lim.hi
-        xy.(θ)
-    end
-end
-
-@recipe function f(b::ParametricCurve, limits=Interval(0.0, 1.0))
-    grid --> false
-    axis --> false
-    ticks --> false
-    legend --> false
-    aspect_ratio --> :equal
-    linewidth --> 2.0
-    @series begin
-        xy(u) = b(u)
-        lim = limits
         Δ = diam(lim)/100
         θ = lim.lo:Δ:lim.hi
         xy.(θ)

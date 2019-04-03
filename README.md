@@ -28,27 +28,27 @@ between an absolutely continuous parametric curve and another object, or between
 
 Methods are available to create and manipulate Bernstein polynomials. A Bernstein polynomial with uniformly randomly sampled control points can be created with:
 ```julia
-julia> rand(RectifiableBernstein{3, 6})
-a 5th order Rectifiable Bernstein polynomial with control points at:
+julia> rand(Bernstein{3, 6})
+a 5th order Bernstein polynomial with control points at:
 ([0.345747, 0.149338, 0.609345], [0.86539, 0.736102, 0.31424], [0.20149, 0.167441, 0.662126], [0.975667, 0.468056, 0.505278], [0.371533, 0.477992, 0.83668], [0.322821, 0.973494, 0.93129])
 with an arclength of 1.463398157000094
 ```
 which constructs a 3D 5th order Bernstein polynomial. Control points can be directly fed to the constructor as well:
 ```julia
 julia> cpts = [[0.0, 0.0], [1.0, 2.0], [2.0, 0.0], [3.0, 0.0]];
-julia> c = RectifiableBernstein(cpts)
-a 3rd order Rectifiable Bernstein polynomial with control points at:
+julia> c = Bernstein(cpts)
+a 3rd order Bernstein polynomial with control points at:
 ([0.0, 0.0], [1.0, 2.0], [2.0, 0.0], [3.0, 0.0])
 with an arclength of 3.714835124201342
 ```
 Generally Bernstein polynomials are evaluated between $[0, 1]$, but custom limits can be provided using `Interval` from the `IntervalArithmetic` package:
 ```julia
-julia> c = RectifiableBernstein(cpts, limits=Interval(0.5, 2.5))
-a 3rd order Rectifiable Bernstein polynomial with control points at:
+julia> c = Bernstein(cpts, limits=Interval(0.5, 2.5))
+a 3rd order Bernstein polynomial with control points at:
 ([0.0, 0.0], [1.0, 2.0], [2.0, 0.0], [3.0, 0.0])
 with an arclength of 3.714835124201342
 ```
-The `RectifiableBernstein` types are functors that evaluate the polynomial at some value.
+The `Bernstein` types are functors that evaluate the polynomial at some value.
 ```julia
 julia> c(1.5)
 2-element SArray{Tuple{2},Float64,1,2}:
@@ -122,10 +122,11 @@ julia> plot(c); plot!(obs); plot!(pts)
 
 ### Custom Types
 
-Parametric curves can be user defined. For example, a monomial basis type can be created as a subtype of `RectifiableCurve{D, T}` where `D` is the dimension of the curve and `T` is the eltype:
+Parametric curves can be user defined. For example, a monomial basis type can be created as a subtype of `Curve{D, T}` where `D` is the dimension of the curve and `T` is the eltype:
 ```julia
-struct Monomial{D, N, T} <: RectifiableCurve{D, T}
+struct Monomial{D, N, T} <: Curve{D, T}
   coeff::SVector{N, SVector{D, T}}
+  limits::Interval{T}
 end
 ```
 Methods to compute the evaluation (as a functor), and arclength upper bound has to be provided (see paper for details).

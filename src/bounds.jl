@@ -1,20 +1,20 @@
 export upperbound, lowerbound
 
-function upperbound(a, b::RectifiableCurve{D}, β::Interval) where {D}
+function upperbound(a, b::Curve{D}, β::Interval) where {D}
     evalpt = b(mid(β))
     return minimum_distance(a, evalpt, @SVector(ones(D)))
 end
 
-function upperbound(a::RectifiableCurve, b::RectifiableCurve, α::Interval, β::Interval)
+function upperbound(a::Curve, b::Curve, α::Interval, β::Interval)
     norm(a(mid(α)) - b(mid(β)))
 end
 
-function lowerbound(a, b::RectifiableCurve{D}, β::Interval) where {D}
+function lowerbound(a, b::Curve{D}, β::Interval) where {D}
     approx = cvxhull(b, β)
     return minimum_distance(a, approx, @SVector(ones(D)))
 end
 
-function lowerbound(a::RectifiableCurve{D}, b::RectifiableCurve{D}, α::Interval, β::Interval) where {D}
+function lowerbound(a::Curve{D}, b::Curve{D}, α::Interval, β::Interval) where {D}
     bapprox = cvxhull(b, β)
     aapprox = cvxhull(a, α)
     return minimum_distance(aapprox, bapprox, @SVector(ones(D)))
@@ -32,7 +32,7 @@ function support(vertices::SVector{N, SVector{D, T}}, dir::SVector{D, T}) where 
     @inbounds vertices[argmax(Ref(dir').*vertices)]
 end
 
-function cvxhull(b::RectifiableCurve{2, T}, β::Interval) where {T}
+function cvxhull(b::Curve{2, T}, β::Interval) where {T}
     fA = b(β.lo)
     fB = b(β.hi)
     center = (fA + fB)/2.0
@@ -61,7 +61,7 @@ function cvxhull(b::RectifiableCurve{2, T}, β::Interval) where {T}
     end
 end
 
-function cvxhull(b::RectifiableCurve{3, T}, β::Interval) where {T}
+function cvxhull(b::Curve{3, T}, β::Interval) where {T}
     fA = b(β.lo)
     fB = b(β.hi)
     center = (fA + fB)/2.0

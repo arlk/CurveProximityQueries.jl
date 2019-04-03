@@ -16,7 +16,7 @@ anim = @animate for i=1:360
     b = [SVector{2}(0.0, 0.0),
          movecp(t)...,
          SVector{2}(3.0, 0.0)]
-    B = RectifiableBernstein(b...)
+    B = Bernstein(b...)
 
     seed!(1)
     A = randpoly([1.5, 0.0], t; scale=1.0)
@@ -41,12 +41,12 @@ anim = @animate for i=1:360
     b = [SVector{2}(0.0, 0.0),
          movecp(t)...,
          SVector{2}(3.0, 0.0)]
-    B = RectifiableBernstein(b...)
+    B = Bernstein(b...)
 
     a = [SVector{2}(0.0, 1.5),
          movecp(t; k=2)...,
          SVector{2}(3.0, 1.5)]
-    A = RectifiableBernstein(a...)
+    A = Bernstein(a...)
 
     plot(xlims = (-1.5,4.5), ylims = (-2.0,2.0))
 

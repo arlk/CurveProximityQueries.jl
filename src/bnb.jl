@@ -1,4 +1,4 @@
-function _init(a, b::RectifiableCurve{D, T}) where {D, T}
+function _init(a, b::Curve{D, T}) where {D, T}
     leaves = PriorityQueue{Interval{T}, T}()
     glb, gub = getbounds(a, b, b.limits)
     soln = b.limits
@@ -6,7 +6,7 @@ function _init(a, b::RectifiableCurve{D, T}) where {D, T}
     return leaves, glb, gub, soln
 end
 
-function _init(a::RectifiableCurve{D, T}, b::RectifiableCurve{D, T}) where {D, T}
+function _init(a::Curve{D, T}, b::Curve{D, T}) where {D, T}
     leaves = PriorityQueue{IntervalBox{2, T}, T}()
     glb, gub = getbounds(a, b, a.limits, b.limits)
     soln = IntervalBox(a.limits, b.limits)
@@ -14,7 +14,7 @@ function _init(a::RectifiableCurve{D, T}, b::RectifiableCurve{D, T}) where {D, T
     return leaves, glb, gub, soln
 end
 
-function _init(b::RectifiableCurve, a)
+function _init(b::Curve, a)
     return _init(a, b)
 end
 
@@ -37,11 +37,11 @@ function _loop(a, b, leaves, glb, gub)
     return glb, gub, soln
 end
 
-function _loop(b::RectifiableCurve, a, leaves, glb, gub)
+function _loop(b::Curve, a, leaves, glb, gub)
     return _loop(a, b, leaves, glb, gub)
 end
 
-function _loop(a::RectifiableCurve, b::RectifiableCurve, leaves, glb, gub)
+function _loop(a::Curve, b::Curve, leaves, glb, gub)
     leaf = dequeue!(leaves)
 
     left, right = bisect(leaf)
@@ -68,17 +68,17 @@ function closest_points(a, b; atol=1e-8)
     return closest_points(a, b, soln)
 end
 
-function closest_points(a, b::RectifiableCurve{D}, soln) where {D}
+function closest_points(a, b::Curve{D}, soln) where {D}
     evalb = b(mid(soln))
     return closest_points(a, evalb, @SVector(ones(D)))
 end
 
-function closest_points(b::RectifiableCurve{D}, a, soln) where {D}
+function closest_points(b::Curve{D}, a, soln) where {D}
     pts = closest_points(a, b, soln)
     reverse(pts)
 end
 
-function closest_points(a::RectifiableCurve{D}, b::RectifiableCurve{D}, soln) where {D}
+function closest_points(a::Curve{D}, b::Curve{D}, soln) where {D}
     evala = a(mid(soln[1]))
     evalb = b(mid(soln[2]))
     return closest_points(evala, evalb, @SVector(ones(D)))
