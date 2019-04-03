@@ -70,7 +70,7 @@ end
 
 function closest_points(a, b::RectifiableCurve{D}, soln) where {D}
     evalb = b(mid(soln))
-    return ConvexBodyProximityQueries.closest_points(a, evalb, @SVector(ones(D)))
+    return closest_points(a, evalb, @SVector(ones(D)))
 end
 
 function closest_points(b::RectifiableCurve{D}, a, soln) where {D}
@@ -81,7 +81,7 @@ end
 function closest_points(a::RectifiableCurve{D}, b::RectifiableCurve{D}, soln) where {D}
     evala = a(mid(soln[1]))
     evalb = b(mid(soln[2]))
-    return ConvexBodyProximityQueries.closest_points(evala, evalb, @SVector(ones(D)))
+    return closest_points(evala, evalb, @SVector(ones(D)))
 end
 
 function minimum_distance(a, b; atol=1e-8)

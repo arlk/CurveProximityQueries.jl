@@ -2,7 +2,7 @@ export upperbound, lowerbound
 
 function upperbound(a, b::RectifiableCurve{D}, β::Interval) where {D}
     evalpt = b(mid(β))
-    return ConvexBodyProximityQueries.minimum_distance(a, evalpt, @SVector(ones(D)))
+    return minimum_distance(a, evalpt, @SVector(ones(D)))
 end
 
 function upperbound(a::RectifiableCurve, b::RectifiableCurve, α::Interval, β::Interval)
@@ -11,13 +11,13 @@ end
 
 function lowerbound(a, b::RectifiableCurve{D}, β::Interval) where {D}
     approx = cvxhull(b, β)
-    return ConvexBodyProximityQueries.minimum_distance(a, approx, @SVector(ones(D)))
+    return minimum_distance(a, approx, @SVector(ones(D)))
 end
 
 function lowerbound(a::RectifiableCurve{D}, b::RectifiableCurve{D}, α::Interval, β::Interval) where {D}
     bapprox = cvxhull(b, β)
     aapprox = cvxhull(a, α)
-    return ConvexBodyProximityQueries.minimum_distance(aapprox, bapprox, @SVector(ones(D)))
+    return minimum_distance(aapprox, bapprox, @SVector(ones(D)))
 end
 
 function getbounds(a, b, θ...)
