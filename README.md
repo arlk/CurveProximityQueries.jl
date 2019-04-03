@@ -116,7 +116,7 @@ All the above tests can be performed when `obs` is replaced with another paramet
 ### Plotting
 Plotting recipes are provided for the curves. For example to plot the closest points between `obs` and `c`, one can simply:
 ```julia
-julia> plot(c); plot!(obs); plot!(pt)
+julia> plot(c); plot!(obs); plot!(pts)
 ```
 ![](https://github.com/arlk/CurveProximityQueries.jl/raw/master/readme/example.png)
 
