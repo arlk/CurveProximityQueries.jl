@@ -12,7 +12,7 @@ CurveProximityQueries implements methods to compute the
  - Tolerance Verification
  - Collision Detection
 
-between an absolutely continuous parametric curve and another object, or between two curves. If you find this package/work useful in your research please cite:
+between an absolutely continuous parametric curve and another object, or between two curves. If you find this package/work useful in your research please cite our [paper](https://arxiv.org/pdf/1902.05027.pdf):
 ```
 @article{lakshmanan2019proximity,
   title={Proximity Queries for Absolutely Continuous Parametric Curves},
