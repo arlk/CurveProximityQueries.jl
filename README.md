@@ -24,6 +24,12 @@ between an absolutely continuous parametric curve and another object, or between
 
 ## Usage
 
+### Installation
+
+```julia
+julia> ] add CurveProximityQueries
+```
+
 ### Curve Types
 
 Methods are available to create and manipulate Bernstein polynomials. A Bernstein polynomial with uniformly randomly sampled control points can be created with:
