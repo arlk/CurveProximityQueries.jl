@@ -15,6 +15,7 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 [compat]
 ConvexBodyProximityQueries = "0.1"
 DataStructures = "0.15"
+IntervalArithmetic = "0.15"
 RecipesBase = "0.6"
 StaticArrays = "0.10"
 julia = "1.1"
