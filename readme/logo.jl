@@ -1,4 +1,5 @@
 using CurveProximityQueries
+using ConvexProximityQueries
 using StaticArrays
 using Plots
 using Random: seed!

@@ -72,7 +72,7 @@ Several algebraic operations over Bernstein polynomials are available for conven
 
 ### Obstacle Types
 
-Several obstacle types are provided with convenience macros:
+Several obstacle types are provided with convenience macros from [ConvexBodyProximityQueries.jl](https://github.com/arlk/ConvexBodyProximityQueries.jl):
 ```julia
 julia> @point rand(3)
 ConvexPolygon{3,1,Float64}(SArray{Tuple{3},Float64,1,3}[[0.135678, 0.840508, 0.140532]])
