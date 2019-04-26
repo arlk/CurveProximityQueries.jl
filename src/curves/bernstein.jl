@@ -201,7 +201,7 @@ end
 
 function arclength(b::Bernstein)
     s = b.s(1.0)
-    s > 0 ? sqrt(t*s) : 0.0
+    s > 0 ? sqrt(s) : 0.0
 end
 
 Base.eltype(::Type{Bernstein{D, N, T}}) where {D, N, T} = T
