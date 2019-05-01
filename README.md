@@ -18,6 +18,7 @@ between an absolutely continuous parametric curve and another object, or between
   title={Proximity Queries for Absolutely Continuous Parametric Curves},
   author={Lakshmanan, Arun and Patterson, Andrew and Cichella, Venanzio and Hovakimyan, Naira},
   journal={arXiv preprint arXiv:1902.05027},
+  note= "{Accepted to Robotic Science and Systems (RSS) 2019.}",
   year={2019}
 }
 ```
