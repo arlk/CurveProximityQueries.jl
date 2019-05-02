@@ -1,6 +1,6 @@
 export Curve
 export Bernstein
-export differentiate, integrate, arclength
+export arclength
 
 abstract type Curve{D, T} end
 
