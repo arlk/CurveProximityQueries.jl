@@ -16,6 +16,21 @@ using RecipesBase
     end
 end
 
+@recipe function f(b::Curve, lim::Interval)
+    grid --> false
+    axis --> false
+    ticks --> false
+    legend --> false
+    aspect_ratio --> :equal
+    linewidth --> 2.0
+    @series begin
+        xy(u) = b(u)
+        Δ = diam(lim)/100
+        θ = lim.lo:Δ:lim.hi
+        xy.(θ)
+    end
+end
+
 @recipe function f(a::Tuple{SVector{D, T}, SVector{D, T}}) where {D, T}
     grid --> false
     axis --> false
@@ -28,7 +43,6 @@ end
     markershape --> :circle
     markersize --> 5.0
     markerstrokecolor --> :red
-    markerstrokewidth --> 0.0
     @series begin
         v = [a...]
         v
