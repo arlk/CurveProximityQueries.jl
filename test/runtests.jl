@@ -6,7 +6,7 @@ using StaticArrays
 using IntervalArithmetic
 using Random: seed!
 
-import ConvexBodyProximityQueries: differentiate, integrate
+import CurveProximityQueries: differentiate, integrate
 
 @testset "CurveProximityQueries" begin
     @testset "Bernstein Polynomials" begin
