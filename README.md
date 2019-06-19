@@ -19,7 +19,7 @@ between an absolutely continuous parametric curve and another object, or between
     TITLE     = {Proximity Queries for Absolutely Continuous Parametric Curves}, 
     BOOKTITLE = {Proceedings of Robotics: Science and Systems}, 
     YEAR      = {2019}, 
-    ADDRESS   = {FreiburgimBreisgau, Germany}, 
+    ADDRESS   = {Freiburg im Breisgau, Germany}, 
     MONTH     = {June}, 
     DOI       = {10.15607/RSS.2019.XV.042} 
 }
