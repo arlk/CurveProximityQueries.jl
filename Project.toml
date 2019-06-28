@@ -1,7 +1,7 @@
 name = "CurveProximityQueries"
 uuid = "e79eea86-5fe6-5310-9049-79d90d78ad74"
 authors = ["Arun Lakshmanan <lakshma2@illinois.edu>"]
-version = "0.1.3"
+version = "0.1.4"
 
 [deps]
 ConvexBodyProximityQueries = "e9983d58-8b29-5530-8046-db49618142f9"
