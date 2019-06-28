@@ -12,7 +12,7 @@ using RecipesBase
         lim = b.limits
         Δ = diam(lim)/100
         θ = lim.lo:Δ:lim.hi
-        xy.(θ)
+        Tuple.(xy.(θ))
     end
 end
 
@@ -27,7 +27,7 @@ end
         xy(u) = b(u)
         Δ = diam(lim)/100
         θ = lim.lo:Δ:lim.hi
-        xy.(θ)
+        Tuple.(xy.(θ))
     end
 end
 
@@ -44,7 +44,6 @@ end
     markersize --> 5.0
     markerstrokecolor --> :red
     @series begin
-        v = [a...]
-        v
+        Tuple.([a...])
     end
 end
