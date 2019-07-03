@@ -141,7 +141,7 @@ end
     nck = _binomial(b)
 
     for k = 1:2N-1
-        exprs[k] = :(zero($T))
+        exprs[k] = :(zero($T)*zero($T))
         den = (k==1) ? :(one($T)) : :($den*$(2N-k)/$(k-1))
         for j = max(1, k-N+1):min(N, k)
             exprs[k] = :($(exprs[k]) + $(nck[j])*$(nck[k-j+1])*b[$j]'*b[$(k-j+1)])
@@ -188,18 +188,18 @@ end
 function arclength(b::Bernstein, t::Real)
     t = scalet(b, t)
     s = b.s(t)
-    s > 0 ? sqrt(t*s) : 0.0
+    s > zero(s) ? sqrt(t*s) : float(zero(eltype(b)))
 end
 
 function arclength(b::Bernstein, θ::Interval)
     θ = scalet(b, θ)
     s = b.s(θ.hi) - b.s(θ.lo)
-    s > 0 ? sqrt(diam(θ)*s) : 0.0
+    s > zero(s) ? sqrt(diam(θ)*s) : float(zero(eltype(b)))
 end
 
 function arclength(b::Bernstein)
     s = b.s(1.0)
-    s > 0 ? sqrt(s) : 0.0
+    s > zero(s) ? sqrt(s) : float(zero(eltype(b)))
 end
 
 Base.eltype(::Type{<:Bernstein{D, N, M, T}}) where {D, N, M, T} = T

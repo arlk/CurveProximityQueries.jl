@@ -5,6 +5,7 @@ using LinearAlgebra
 using StaticArrays
 using IntervalArithmetic
 using Random: seed!
+using Unitful: nm, μm, mm
 
 import CurveProximityQueries: differentiate, integrate
 
@@ -96,5 +97,15 @@ import CurveProximityQueries: differentiate, integrate
         @test tolerance_verification(c, d, 0.1) == true
         @test tolerance_verification(c, d, 0.3) == false
         @test collision_detection(c, d) == false
+    end
+    @testset "Dimensionful curves" begin
+        b2 = Bernstein([[0.0, 1.0]μm, [1.0, 1.0]μm, [1.0, 0.0]μm])
+        @test b2(0.0) == [0, 1000]nm
+        @test b2(1.0) == [0.001, 0]mm
+        @test arclength(b2) == arclength(Bernstein([[0,1], [1,1], [1,0]])) * μm
+        @test length(CurveProximityQueries.cvxhull(b2, Interval(0.0, 1.0))) == 8
+
+        b3 = Bernstein([[0.0, 0.0, 0.0]mm, [1.0, 0.0, 0.0]mm, [1.0, 0.0, 1.0]mm])
+        @test length(CurveProximityQueries.cvxhull(b3, Interval(0.0, 1.0))) == 16
     end
 end
