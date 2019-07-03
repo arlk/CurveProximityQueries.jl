@@ -18,11 +18,11 @@ import CurveProximityQueries: differentiate, integrate
         @test_broken eltype(Bernstein([[0, 0], [1, 1]])) <: Float64
 
         # none of the following should error; some should be inferrable
-        @test_broken Bernstein([
+        @test Bernstein([
                 @SVector([0.0, 0.0]),
                 @SVector([1.0, 1.0])
             ])(0.5) === @SVector([0.5, 0.5])
-        @test_broken @inferred(Bernstein(@SVector([
+        @test @inferred(Bernstein(@SVector([
                 @SVector([0.0, 0.0]),
                 @SVector([1.0, 1.0])
             ])))(0.5) === @SVector([0.5, 0.5])

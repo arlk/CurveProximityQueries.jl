@@ -6,19 +6,15 @@ struct BernsteinBase{D, N, T}
     control_points::SVector{N, SVector{D, T}}
 end
 
-function BernsteinBase(cp::Vararg{SVector,N}) where {N}
-    cpts = SVector{N}(cp...)
+function BernsteinBase(cp::Vararg{SVector{<:Any, <:Number}})
+    cpts = SVector(cp...)
     BernsteinBase(cpts)
 end
 
-function BernsteinBase(data::Array{Array{T, 1}}) where {T}
+function BernsteinBase(data::AbstractVector)
     cptsz = length(data)
     dimsz = length(data[1])
-    BernsteinBase(data, Val(dimsz), Val(cptsz))
-end
-
-function BernsteinBase(data::Array{Array{T, 1}}, ::Val{D}, ::Val{N}) where {D, N, T}
-    cpts = SVector{N}([SVector{D}(d) for d in data])
+    cpts = SVector{cptsz}((SVector{dimsz}(d) for d in data)...)
     BernsteinBase(cpts)
 end
 
@@ -162,21 +158,19 @@ struct Bernstein{D, N, M, T} <: Curve{D, T}
     limits::Interval{T}
 end
 
-function Bernstein(cp::Vararg{SVector,N}; limits=Interval(0., 1.)) where {N}
-    cpts = SVector{N}(cp...)
-    f = BernsteinBase(cpts)
+# <:Number specificity needed to avoid error when doing
+# Bernstein(@SVector([ @SVector([a,b]), @SVector([c,d]), ... ]))
+function Bernstein(cp::Vararg{SVector{<:Any, <:Number}}; limits=Interval(0., 1.))
+    Bernstein(BernsteinBase(cp...), limits=limits)
+end
+
+function Bernstein(f::BernsteinBase; limits=Interval(0., 1.))
     df = differentiate(f)
     s = integrate(_magsquared(df))
     Bernstein(f, s, limits)
 end
 
-function Bernstein(f::BernsteinBase; limits=Interval(0., 1.)) where {N}
-    df = differentiate(f)
-    s = integrate(_magsquared(df))
-    Bernstein(f, s, limits)
-end
-
-function Bernstein(data::Array{Array{T, 1}}; limits=Interval(0., 1.)) where {T}
+function Bernstein(data::AbstractVector; limits=Interval(0., 1.))
     Bernstein(BernsteinBase(data), limits=limits)
 end
 
