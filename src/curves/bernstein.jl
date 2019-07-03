@@ -207,7 +207,7 @@ end
 Base.eltype(::Type{Bernstein{D, N, T}}) where {D, N, T} = T
 Base.getindex(b::Bernstein, j::Int) = b.f.control_points[j]
 
-function Base.show(io::IO, b::Bernstein{D, N, T}) where {D, N, T}
+function Base.show(io::IO, b::Bernstein{D, N}) where {D, N}
     ordind = (N-1)%10 == 1 ? "st" : "th"
     ordind = (N-1)%10 == 2 ? "nd" : ordind
     ordind = (N-1)%10 == 3 ? "rd" : ordind
