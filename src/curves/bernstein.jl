@@ -2,19 +2,23 @@ import Base: show, product, @_inline_meta
 import Base: eltype, getindex
 import Base: +,-,*,/,sum
 
-struct BernsteinBase{D, N, T}
-    control_points::SVector{N, SVector{D, T}}
+struct BernsteinBase{D, N, T, A <: StaticVector{D, T}}
+    control_points::SVector{N, A}
 end
 
-function BernsteinBase(cp::Vararg{SVector{<:Any, <:Number}})
-    cpts = SVector(cp...)
+function BernsteinBase(cp::Vararg{StaticVector{<:Any, <:Number}})
+    cpts = SVector(map(t->map(float, t), cp)...)
     BernsteinBase(cpts)
 end
 
 function BernsteinBase(data::AbstractVector)
+    @assert !isempty(data)
     cptsz = length(data)
-    dimsz = length(data[1])
-    cpts = SVector{cptsz}((SVector{dimsz}(d) for d in data)...)
+    dimsz = length(first(data))
+    T1 = eltype(data)
+    T2 = float(eltype(T1))
+    T = StaticArrays.similar_type(T1, T2, StaticArrays.Size((dimsz,)))
+    cpts = SVector{cptsz}((T(d) for d in data)...)
     BernsteinBase(cpts)
 end
 
@@ -121,7 +125,7 @@ end
     end
 end
 
-@generated function _binomial(::Type{BernsteinBase{D, N, T}}) where {D, N, T}
+@generated function _binomial(::Type{BernsteinBase{D, N, T, A}}) where {D, N, T, A}
     nck = Array{Expr}(undef, N)
     for i = 1:N
         nck[i] = (i==1) ? :(one($T)) : :($(nck[i-1])*($N-$i+1)/($i-1))
@@ -152,15 +156,15 @@ end
     end
 end
 
-struct Bernstein{D, N, M, T} <: Curve{D, T}
-    f::BernsteinBase{D, N, T}
-    s::BernsteinBase{1, M, T}
-    limits::Interval{T}
+struct Bernstein{D, N, M, Tf, Ts, Af, As, J} <: Curve{D, Tf}
+    f::BernsteinBase{D, N, Tf, Af}
+    s::BernsteinBase{1, M, Ts, As}
+    limits::Interval{J}
 end
 
 # <:Number specificity needed to avoid error when doing
 # Bernstein(@SVector([ @SVector([a,b]), @SVector([c,d]), ... ]))
-function Bernstein(cp::Vararg{SVector{<:Any, <:Number}}; limits=Interval(0., 1.))
+function Bernstein(cp::Vararg{StaticVector{<:Any, <:Number}}; limits=Interval(0., 1.))
     Bernstein(BernsteinBase(cp...), limits=limits)
 end
 
@@ -198,7 +202,7 @@ function arclength(b::Bernstein)
     s > 0 ? sqrt(s) : 0.0
 end
 
-Base.eltype(::Type{Bernstein{D, N, T}}) where {D, N, T} = T
+Base.eltype(::Type{<:Bernstein{D, N, M, T}}) where {D, N, M, T} = T
 Base.getindex(b::Bernstein, j::Int) = b.f.control_points[j]
 
 function Base.show(io::IO, b::Bernstein{D, N}) where {D, N}
