@@ -9,6 +9,28 @@ using Random: seed!
 import CurveProximityQueries: differentiate, integrate
 
 @testset "CurveProximityQueries" begin
+    @testset "Constructors" begin
+        # should return SVector when constructed without SVectors
+        @test Bernstein([[0.0, 0.0], [1.0, 1.0]])(0.5) === @SVector([0.5, 0.5])
+
+        # non-floats arguments should become floats to satisfy assumptions
+        # elsewhere in the code (e.g. use of `eps(T)`)
+        @test_broken eltype(Bernstein([[0, 0], [1, 1]])) <: Float64
+
+        # none of the following should error; some should be inferrable
+        @test_broken Bernstein([
+                @SVector([0.0, 0.0]),
+                @SVector([1.0, 1.0])
+            ])(0.5) === @SVector([0.5, 0.5])
+        @test_broken @inferred(Bernstein(@SVector([
+                @SVector([0.0, 0.0]),
+                @SVector([1.0, 1.0])
+            ])))(0.5) === @SVector([0.5, 0.5])
+        @test @inferred(Bernstein(
+                @SVector([0.0, 0.0]),
+                @SVector([1.0, 1.0])
+            ))(0.5) === @SVector([0.5, 0.5])
+    end
     @testset "Bernstein Polynomials" begin
         B2 = rand(Bernstein{2,8})
         B3 = rand(Bernstein{3,5})
