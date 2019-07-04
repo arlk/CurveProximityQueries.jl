@@ -1,23 +1,23 @@
 export upperbound, lowerbound
 
-function upperbound(a, b::Curve{D}, β::Interval) where {D}
+function upperbound(a, b::Curve{D, T}, β::Interval) where {D, T}
     evalpt = b(mid(β))
-    return minimum_distance(a, evalpt, @SVector(ones(D)))
+    return minimum_distance(a, evalpt, @SVector(fill(oneunit(T), D)))
 end
 
 function upperbound(a::Curve, b::Curve, α::Interval, β::Interval)
     norm(a(mid(α)) - b(mid(β)))
 end
 
-function lowerbound(a, b::Curve{D}, β::Interval) where {D}
+function lowerbound(a, b::Curve{D, T}, β::Interval) where {D, T}
     approx = cvxhull(b, β)
-    return minimum_distance(a, approx, @SVector(ones(D)))
+    return minimum_distance(a, approx, @SVector(fill(oneunit(T), D)))
 end
 
-function lowerbound(a::Curve{D}, b::Curve{D}, α::Interval, β::Interval) where {D}
+function lowerbound(a::Curve{D}, b::Curve{D, T}, α::Interval, β::Interval) where {D, T}
     bapprox = cvxhull(b, β)
     aapprox = cvxhull(a, α)
-    return minimum_distance(aapprox, bapprox, @SVector(ones(D)))
+    return minimum_distance(aapprox, bapprox, @SVector(fill(oneunit(T), D)))
 end
 
 function getbounds(a, b, θ...)
@@ -27,8 +27,8 @@ function getbounds(a, b, θ...)
 end
 
 import ConvexBodyProximityQueries: support
-support(pt::SVector{D, T}, dir::SVector{D, T}) where {D, N, T} = pt
-function support(vertices::SVector{N, SVector{D, T}}, dir::SVector{D, T}) where {D, N, T}
+support(pt::SVector{D}, dir::SVector{D}) where {D} = pt
+function support(vertices::SVector{N, SVector{D, T}}, dir::SVector{D}) where {D, N, T}
     @inbounds vertices[argmax(Ref(dir').*vertices)]
 end
 
