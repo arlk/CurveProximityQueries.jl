@@ -2,23 +2,23 @@ import Base: show, product, @_inline_meta
 import Base: eltype, getindex
 import Base: +,-,*,/,sum
 
-struct BernsteinBase{D, N, T}
-    control_points::SVector{N, SVector{D, T}}
+struct BernsteinBase{D, N, T, A <: StaticVector{D, T}}
+    control_points::SVector{N, A}
 end
 
-function BernsteinBase(cp::Vararg{SVector,N}) where {N}
-    cpts = SVector{N}(cp...)
+function BernsteinBase(cp::Vararg{StaticVector{<:Any, <:Number}})
+    cpts = SVector(map(t->map(float, t), cp)...)
     BernsteinBase(cpts)
 end
 
-function BernsteinBase(data::Array{Array{T, 1}}) where {T}
+function BernsteinBase(data::AbstractVector)
+    @assert !isempty(data)
     cptsz = length(data)
-    dimsz = length(data[1])
-    BernsteinBase(data, Val(dimsz), Val(cptsz))
-end
-
-function BernsteinBase(data::Array{Array{T, 1}}, ::Val{D}, ::Val{N}) where {D, N, T}
-    cpts = SVector{N}([SVector{D}(d) for d in data])
+    dimsz = length(first(data))
+    T1 = eltype(data)
+    T2 = float(eltype(T1))
+    T = StaticArrays.similar_type(T1, T2, StaticArrays.Size((dimsz,)))
+    cpts = SVector{cptsz}((T(d) for d in data)...)
     BernsteinBase(cpts)
 end
 
@@ -125,7 +125,7 @@ end
     end
 end
 
-@generated function _binomial(::Type{BernsteinBase{D, N, T}}) where {D, N, T}
+@generated function _binomial(::Type{BernsteinBase{D, N, T, A}}) where {D, N, T, A}
     nck = Array{Expr}(undef, N)
     for i = 1:N
         nck[i] = (i==1) ? :(one($T)) : :($(nck[i-1])*($N-$i+1)/($i-1))
@@ -141,7 +141,7 @@ end
     nck = _binomial(b)
 
     for k = 1:2N-1
-        exprs[k] = :(zero($T))
+        exprs[k] = :(zero($T)*zero($T))
         den = (k==1) ? :(one($T)) : :($den*$(2N-k)/$(k-1))
         for j = max(1, k-N+1):min(N, k)
             exprs[k] = :($(exprs[k]) + $(nck[j])*$(nck[k-j+1])*b[$j]'*b[$(k-j+1)])
@@ -156,27 +156,25 @@ end
     end
 end
 
-struct Bernstein{D, N, M, T} <: Curve{D, T}
-    f::BernsteinBase{D, N, T}
-    s::BernsteinBase{1, M, T}
-    limits::Interval{T}
+struct Bernstein{D, N, M, Tf, Ts, Af, As, J} <: Curve{D, Tf}
+    f::BernsteinBase{D, N, Tf, Af}
+    s::BernsteinBase{1, M, Ts, As}
+    limits::Interval{J}
 end
 
-function Bernstein(cp::Vararg{SVector,N}; limits=Interval(0., 1.)) where {N}
-    cpts = SVector{N}(cp...)
-    f = BernsteinBase(cpts)
+# <:Number specificity needed to avoid error when doing
+# Bernstein(@SVector([ @SVector([a,b]), @SVector([c,d]), ... ]))
+function Bernstein(cp::Vararg{StaticVector{<:Any, <:Number}}; limits=Interval(0., 1.))
+    Bernstein(BernsteinBase(cp...), limits=limits)
+end
+
+function Bernstein(f::BernsteinBase; limits=Interval(0., 1.))
     df = differentiate(f)
     s = integrate(_magsquared(df))
     Bernstein(f, s, limits)
 end
 
-function Bernstein(f::BernsteinBase; limits=Interval(0., 1.)) where {N}
-    df = differentiate(f)
-    s = integrate(_magsquared(df))
-    Bernstein(f, s, limits)
-end
-
-function Bernstein(data::Array{Array{T, 1}}; limits=Interval(0., 1.)) where {T}
+function Bernstein(data::AbstractVector; limits=Interval(0., 1.))
     Bernstein(BernsteinBase(data), limits=limits)
 end
 
@@ -190,24 +188,24 @@ end
 function arclength(b::Bernstein, t::Real)
     t = scalet(b, t)
     s = b.s(t)
-    s > 0 ? sqrt(t*s) : 0.0
+    s > zero(s) ? sqrt(t*s) : float(zero(eltype(b)))
 end
 
 function arclength(b::Bernstein, θ::Interval)
     θ = scalet(b, θ)
     s = b.s(θ.hi) - b.s(θ.lo)
-    s > 0 ? sqrt(diam(θ)*s) : 0.0
+    s > zero(s) ? sqrt(diam(θ)*s) : float(zero(eltype(b)))
 end
 
 function arclength(b::Bernstein)
     s = b.s(1.0)
-    s > 0 ? sqrt(s) : 0.0
+    s > zero(s) ? sqrt(s) : float(zero(eltype(b)))
 end
 
-Base.eltype(::Type{Bernstein{D, N, T}}) where {D, N, T} = T
+Base.eltype(::Type{<:Bernstein{D, N, M, T}}) where {D, N, M, T} = T
 Base.getindex(b::Bernstein, j::Int) = b.f.control_points[j]
 
-function Base.show(io::IO, b::Bernstein{D, N, T}) where {D, N, T}
+function Base.show(io::IO, b::Bernstein{D, N}) where {D, N}
     ordind = (N-1)%10 == 1 ? "st" : "th"
     ordind = (N-1)%10 == 2 ? "nd" : ordind
     ordind = (N-1)%10 == 3 ? "rd" : ordind

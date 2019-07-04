@@ -38,12 +38,12 @@ function cvxhull(b::Curve{2, T}, β::Interval) where {T}
     center = (fA + fB)/2.0
     fdist = norm(fA - fB)
     rotate = SMatrix{2,2}(1.0I)
-    if fdist > 0.0
+    if fdist > zero(fdist)
         dir = (fB-fA)/fdist
         rotate = SMatrix{2,2}(dir[1],dir[2],-dir[2],dir[1])
     end
     a = arclength(b, β)/2.0
-    if (a - fdist/2.0) > eps(T)
+    if (a - fdist/2.0) > eps(T)*oneunit(T)
         b = sqrt(a^2 - (fdist/2)^2)
         octagon = SVector{8}(
                    SVector{2}(a*(√2 - 1), b),
@@ -67,7 +67,7 @@ function cvxhull(b::Curve{3, T}, β::Interval) where {T}
     center = (fA + fB)/2.0
     fdist = norm(fA - fB)
     rotate = SMatrix{3,3}(1.0I)
-    if fdist > 0.0
+    if fdist > zero(fdist)
         dir = (fB-fA)/fdist
         aux = SVector{3}(1.0, 0.0, 0.0)
         aux = abs(dir'*aux) < 0.99 ? aux : SVector{3}(0.0, 1.0, 0.0)
@@ -75,7 +75,7 @@ function cvxhull(b::Curve{3, T}, β::Interval) where {T}
         rotate = hcat(dir, aux, auxperp)
     end
     a = arclength(b, β)/2.0
-    if (a - fdist/2.0) > eps(T)
+    if (a - fdist/2.0) > eps(T)*oneunit(T)
         b = sqrt(a^2 - (fdist/2)^2)
         tetradecahedron = SVector{16}(
                    SVector{3}( a,  b*(√2 - 1),  b*(√2 - 1)),

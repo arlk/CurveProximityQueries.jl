@@ -5,10 +5,49 @@ using LinearAlgebra
 using StaticArrays
 using IntervalArithmetic
 using Random: seed!
+using Unitful: nm, μm, mm
 
 import CurveProximityQueries: differentiate, integrate
 
 @testset "CurveProximityQueries" begin
+    @testset "Constructors" begin
+        # should return SVector when constructed without SVectors
+        @test Bernstein([[0.0, 0.0], [1.0, 1.0]])(0.5) === @SVector([0.5, 0.5])
+
+        # non-floats arguments should become floats to satisfy assumptions
+        # elsewhere in the code (e.g. use of `eps(T)`)
+        @test eltype(Bernstein([[0, 0], [1, 1]])) <: Float64
+
+        # none of the following should error; some should be inferrable
+        @test Bernstein([
+                @SVector([0.0, 0.0]),
+                @SVector([1.0, 1.0])
+            ])(0.5) === @SVector([0.5, 0.5])
+        @test @inferred(Bernstein(@SVector([
+                @SVector([0.0, 0.0]),
+                @SVector([1.0, 1.0])
+            ])))(0.5) === @SVector([0.5, 0.5])
+        @test @inferred(Bernstein(
+                @SVector([0.0, 0.0]),
+                @SVector([1.0, 1.0])
+            ))(0.5) === @SVector([0.5, 0.5])
+
+        # similar reasoning below, but allow for any StaticVector
+        struct Point{T} <: StaticArrays.FieldVector{2, T}
+            x::T
+            y::T
+        end
+        StaticArrays.similar_type(::Type{P}, ::Type{T},
+            ::StaticArrays.Size{(2,)}) where {P <: Point, T} = Point{T}
+
+        @test Bernstein([Point(0.0, 0.0), Point(1.0, 1.0)])(0.5) ===
+            Point(0.5, 0.5)
+        @test @inferred(
+            Bernstein(@SVector([Point(0.0, 0.0), Point(1.0, 1.0)])))(0.5) ===
+                Point(0.5, 0.5)
+        @test @inferred(Bernstein(Point(0.0, 0.0), Point(1.0, 1.0)))(0.5) ===
+            Point(0.5, 0.5)
+    end
     @testset "Bernstein Polynomials" begin
         B2 = rand(Bernstein{2,8})
         B3 = rand(Bernstein{3,5})
@@ -58,5 +97,15 @@ import CurveProximityQueries: differentiate, integrate
         @test tolerance_verification(c, d, 0.1) == true
         @test tolerance_verification(c, d, 0.3) == false
         @test collision_detection(c, d) == false
+    end
+    @testset "Dimensionful curves" begin
+        b2 = Bernstein([[0.0, 1.0]μm, [1.0, 1.0]μm, [1.0, 0.0]μm])
+        @test b2(0.0) == [0, 1000]nm
+        @test b2(1.0) == [0.001, 0]mm
+        @test arclength(b2) == arclength(Bernstein([[0,1], [1,1], [1,0]])) * μm
+        @test length(CurveProximityQueries.cvxhull(b2, Interval(0.0, 1.0))) == 8
+
+        b3 = Bernstein([[0.0, 0.0, 0.0]mm, [1.0, 0.0, 0.0]mm, [1.0, 0.0, 1.0]mm])
+        @test length(CurveProximityQueries.cvxhull(b3, Interval(0.0, 1.0))) == 16
     end
 end

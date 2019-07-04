@@ -107,7 +107,7 @@ function collision_detection(a, b; atol=1e-8)
     leaves, glb, gub, soln = _init(a, b)
     while gub > atol
         glb, gub, soln = _loop(a, b, leaves, glb, gub)
-        if glb > 0
+        if glb > zero(glb)
             return false
         end
     end
