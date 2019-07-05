@@ -112,4 +112,18 @@ import CurveProximityQueries: differentiate, integrate
         @test tolerance_verification(b3, c3, 2cm, atol=1e-8mm) == true
         @test collision_detection(b3, c3, atol=1e-8mm) == false
     end
+    @testset "Support" begin
+        @test CurveProximityQueries.support(Point(1.0, 2.0), Point(1.0, 1.0)) ===
+            Point(1.0, 2.0)
+        @test CurveProximityQueries.support(@SVector(
+            [Point(0.0, 1.0), Point(1.0, 2.0)]), @SVector([1.0, 1.0])) ===
+                Point(1.0, 2.0)
+        @test CurveProximityQueries.support(@SVector(
+            [@SVector([0.0, 1.0]), @SVector([1.0, 2.0])]),
+                @SVector([1.0, 1.0])) === @SVector([1.0, 2.0])
+        @test CurveProximityQueries.support(@SVector(
+            [Point(0.0, 1.0), Point(1.0, 2.0), Point(3.0, 4.0)]), Point(1.0, 1.0)) ===
+                Point(3.0, 4.0)
+
+    end
 end

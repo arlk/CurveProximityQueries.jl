@@ -27,10 +27,14 @@ function getbounds(a, b, θ...)
 end
 
 import ConvexBodyProximityQueries: support
-support(pt::SVector{D}, dir::SVector{D}) where {D} = pt
-function support(vertices::SVector{N, SVector{D, T}}, dir::SVector{D}) where {D, N, T}
-    @inbounds vertices[argmax(Ref(dir').*vertices)]
-end
+support(pt::StaticVector{D}, dir::StaticVector{D}) where {D} = pt
+# the following two methods are both needed for method ambiguity resolution
+# given the method defined above, but both should do the same thing.
+support(vertices::SVector{N, <:StaticVector{D, T}}, dir::StaticVector{D}) where {D, N, T} =
+    _support(vertices, dir)
+support(vertices::SVector{D, <:StaticVector{D, T}}, dir::StaticVector{D}) where {D, T} =
+    _support(vertices, dir)
+_support(vertices, dir) = @inbounds vertices[argmax(Ref(dir').*vertices)]
 
 function cvxhull(b::Curve{2, T}, β::Interval) where {T}
     fA = b(β.lo)
