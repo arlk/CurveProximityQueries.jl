@@ -30,7 +30,7 @@ between an absolutely continuous parametric curve and another object, or between
 ### Installation
 
 ```julia
-julia> ] add CurveProximityQueries
+julia> add CurveProximityQueries
 ```
 
 ### Curve Types
