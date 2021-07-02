@@ -33,7 +33,7 @@ function _loop(a, b, leaves, glb, gub)
     gub = gub > ub ? ub : gub
     leaves[right] = lb
 
-    soln, glb = peek(leaves)
+    soln, glb = DataStructures.peek(leaves)
     return glb, gub, soln
 end
 
@@ -56,7 +56,7 @@ function _loop(a::Curve, b::Curve, leaves, glb, gub)
     gub = gub > ub ? ub : gub
     leaves[right] = lb
 
-    soln, glb = peek(leaves)
+    soln, glb = DataStructures.peek(leaves)
     return glb, gub, soln
 end
 
