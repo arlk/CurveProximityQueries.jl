@@ -1,7 +1,7 @@
 name = "CurveProximityQueries"
 uuid = "e79eea86-5fe6-5310-9049-79d90d78ad74"
 authors = ["Arun Lakshmanan <lakshma2@illinois.edu>"]
-version = "0.1.5"
+version = "0.2.0"
 
 [deps]
 ConvexBodyProximityQueries = "e9983d58-8b29-5530-8046-db49618142f9"
@@ -13,16 +13,9 @@ RecipesBase = "3cdcf5f2-1ef4-517c-9805-6587b60abb01"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 
 [compat]
-ConvexBodyProximityQueries = "0.1"
-DataStructures = "0.15"
-IntervalArithmetic = "0.15"
-RecipesBase = "0.6"
-StaticArrays = "0.10"
+ConvexBodyProximityQueries = "0.1, 0.2"
+DataStructures = "0.15, 0.16, 0.17, 0.18"
+IntervalArithmetic = "0.15, 0.16, 0.17, 0.18"
+RecipesBase = "0.6, 0.7, 0.8, 1.0"
+StaticArrays = "0.10, 0.11, 0.12, 1.0"
 julia = "1.1"
-
-[extras]
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
-
-[targets]
-test = ["Test", "Unitful"]
